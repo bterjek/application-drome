@@ -1,6 +1,10 @@
 # macOS
 .DS_Store
 
+# git-crypt symmetric key — never commit this
+cv-generator.key
+*.key
+
 # Personal CV data
 cv-source.md
 clarifications.md

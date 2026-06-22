@@ -1,0 +1,2 @@
+# git-crypt: encrypt all skill prompt files
+.claude/skills/**/*.md filter=git-crypt diff=git-crypt

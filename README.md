@@ -2,6 +2,8 @@
 
 A Claude Cowork project that helps you tailor your CV to any job description, refine it through four expert reviewer lenses, and prepare for the interview — all within your own project folder.
 
+The skill prompts in this repo are encrypted with [git-crypt](https://github.com/AGWA/git-crypt). You need a key from the repo owner to unlock them.
+
 ---
 
 ## What this project does
@@ -23,7 +25,26 @@ All versions are saved as HTML files. All reviewer findings are recorded and imp
 
 ## Setup (first time only)
 
-Move the contents of the `skills/` folder into `.claude/skills/` — this registers the skills with Claude for this project. You only need to do this once.
+### 1. Install git-crypt
+
+```bash
+brew install git-crypt
+```
+
+### 2. Unlock the repo
+
+You need the key file (`cv-generator.key`) from the repo owner. Once you have it:
+
+```bash
+cd cv-generator
+git-crypt unlock /path/to/cv-generator.key
+```
+
+The skill files will decrypt automatically. You only need to do this once per machine.
+
+### 3. Register the skills with Claude
+
+Open this folder in Claude Cowork. The `.claude/skills/` folder is already in the right place — Claude will pick them up automatically.
 
 ---
 
