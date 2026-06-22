@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Personal CV data
+cv-source.md
+clarifications.md
+
+# Job descriptions (session-specific)
+jd-*.md
+
+# Generated CV versions
+versions/
+
+# Reviewer findings (session-specific, accumulated per user)
+findings/
+
+# Lessons learned (session-specific)
+lessons-learned.md
+
+# Interview prep outputs (session-specific)
+interview-prep/
