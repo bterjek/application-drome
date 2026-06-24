@@ -38,6 +38,19 @@ Do not read multiple skill files at once. Complete one skill fully before moving
 
 ---
 
+## Auto-advance
+
+After completing a skill, **proceed immediately to the next skill without asking for confirmation** unless one of the following is true:
+
+- The next skill needs new information from the user (skills 01, 02, 03, 04, and skill 14 if no `cv-source.md` exists)
+- The pipeline has reached a branch point (e.g. choosing between CV pipeline and cover letter pipeline)
+- The next skill is interview prep — confirm which stages the user wants before running
+- Skill 19 — always ask before archiving (needs company name, role, status)
+
+**Review skills chain automatically.** After skill 05, run skills 06 → 07 → 08 → 09 back-to-back. After skill 14, run 15 → 16 → 17 → 18 back-to-back. Announce each skill briefly before running it, but do not wait for "go ahead."
+
+---
+
 ## Pipeline
 
 ### Shared foundation
@@ -103,7 +116,10 @@ At the start of every conversation, after identifying the user, check which file
 
 ## Entry point menu
 
-Present this when the user arrives with no clear instruction:
+**On first run or when the user starts a session without a specific instruction**, greet them and present this menu without waiting to be asked:
+
+> Welcome to CV Generator. I'll guide you through the full application pipeline.
+> (If this is your first time, say "new application" to start from scratch. If you've used this before, say "continue" and I'll pick up where you left off.)
 
 > **Where would you like to start?**
 >
