@@ -1,96 +1,97 @@
 # CV Generator
 
-A Claude Cowork project that tailors your CV to any job description, refines it through four expert reviewer lenses, and prepares you for every stage of the interview process.
+A structured pipeline for tailoring your CV to any job description, refining it through four expert reviewer lenses, and preparing for every interview stage.
 
-The skill prompts are encrypted with [git-crypt](https://github.com/AGWA/git-crypt). You need a key from the repo owner to unlock them.
+The skill prompts in this repo are encrypted with [git-crypt](https://github.com/AGWA/git-crypt). You need a key from the repo owner to unlock them.
+
+**New here? Read [`docs/how-to-use.md`](docs/how-to-use.md) — it covers everything from setup to a full session, step by step.**
 
 ---
 
 ## How it works
 
-You bring a CV and a job description. The project runs them through a structured pipeline:
+You bring a CV and a job description. The pipeline does the rest:
 
 ```
 Your CV → extract → JD → extract → clarifying questions
-       → generate v1 → recruiter review → v2
-                     → HR review → v3
-                     → hiring manager review → v4
-                     → technical peer review → v5 (final)
-                     → interview prep per persona
+        → generate v1 → recruiter review → v2
+                      → HR review → v3
+                      → hiring manager review → v4
+                      → technical peer review → v5 (final)
+                      → interview prep per persona
 ```
 
-Each reviewer persona has a distinct focus and leaves behind a findings file. Those findings persist across sessions — the more you use the project, the sharper the feedback gets.
+Each reviewer persona leaves behind a findings file that persists across sessions — the more you use the project, the sharper the feedback gets.
+
+---
+
+## Platform support
+
+This project runs on any AI tool that has **native read/write access to your local filesystem**. Three platforms support this out of the box:
+
+| Platform | File access | Cost | Package |
+|----------|------------|------|---------|
+| **Claude Cowork** | Native | Free (limited) / Pro | Built-in — `.claude/skills/` |
+| **Gemini CLI** | Native | Free (1,500 req/day) | `GEMINI.md` — see `platforms/gemini-cli/SETUP.md` |
+| **GitHub Copilot in VS Code** | Native (agent mode) | Free (limited) / $10/mo | `.github/copilot-instructions.md` — see `platforms/github-copilot/SETUP.md` |
+
+Platforms that do **not** support this workflow: ChatGPT (no local filesystem access without MCP setup), Microsoft Copilot web (upload only, no write), Perplexity web.
 
 ---
 
 ## Setup
 
-### 1. Install git-crypt
+### 1. Install git-crypt and unlock
 
 ```bash
 brew install git-crypt
-```
-
-### 2. Clone the repo
-
-```bash
-git clone <repo-url>
-cd cv-generator
-```
-
-### 3. Unlock with the key
-
-You need `cv-generator.key` from the repo owner. Once you have it:
-
-```bash
 git-crypt unlock /path/to/cv-generator.key
 ```
 
-The skill files decrypt in place. You only need to do this once per machine.
+You need `cv-generator.key` from the repo owner. Send them your request — they'll share it securely.
 
-### 4. Open in Claude Cowork
+### 2. Choose your platform and follow its setup guide
 
-Open the `cv-generator` folder in Cowork. Claude will pick up the skills automatically from `.claude/skills/`. No manual setup required.
-
----
-
-## Starting a session
-
-Tell Claude which path you want:
-
-**A — New application**
-You have a CV and a new job description. Claude will extract both, ask a few targeted questions, and generate a tailored CV from scratch.
-
-**B — Continue an existing session**
-You have a `cv-source.md` already. Provide a new JD and jump straight to generation — no need to re-upload your CV.
-
-**C — Interview prep only**
-You have a final CV (v5) and want to prepare for the interview. Run skills 09–12 in any order, one per interview stage.
+- **Claude Cowork** — open this folder in Cowork. Skills load automatically.
+- **Gemini CLI** — see `platforms/gemini-cli/SETUP.md`
+- **GitHub Copilot (VS Code)** — see `platforms/github-copilot/SETUP.md`
 
 ---
 
-## Skills reference
+## Workflow steps
 
-| # | Skill | What it does | Output |
-|---|-------|-------------|--------|
-| 01 | cv-ingestion | Extracts your CV into structured markdown | `cv-source.md` |
-| 02 | jd-ingestion | Extracts JD signals and requirements | `jd-[company]-[role].md` |
-| 03 | clarifying-questions | Asks up to 5 targeted questions to capture your narrative | `clarifications.md` |
-| 04 | cv-generation | Generates a tailored HTML CV | `versions/cv-v1.html` |
-| 05 | recruiter-review | Recruiter lens — ATS, clarity, first impression | `versions/cv-v2.html` + `findings/recruiter.md` |
-| 06 | hr-review | HR lens — culture fit, values, career narrative | `versions/cv-v3.html` + `findings/hr.md` |
-| 07 | hiring-manager-review | Hiring manager lens — outcomes, impact, credibility | `versions/cv-v4.html` + `findings/hiring-manager.md` |
-| 08 | technical-review | Technical peer lens — depth, specifics, domain credibility | `versions/cv-v5.html` + `findings/technical-peer.md` |
-| 09 | interview-prep-recruiter | Likely questions + talking points for recruiter screen | `interview-prep/questions-recruiter.md` |
-| 10 | interview-prep-hr | Likely questions + talking points for HR interview | `interview-prep/questions-hr.md` |
-| 11 | interview-prep-hiring-manager | Likely questions + talking points for hiring manager | `interview-prep/questions-hiring-manager.md` |
-| 12 | interview-prep-technical | Likely questions + talking points for technical interview | `interview-prep/questions-technical-peer.md` |
+All platforms use the same 12 skill files. How you invoke them differs by platform — see the platform-specific guide or router file (`GEMINI.md` / `.github/copilot-instructions.md`).
+
+| Step | What it does | Output |
+|------|-------------|--------|
+| 01 — cv-ingestion | Extract your CV into structured markdown | `cv-source.md` |
+| 02 — jd-ingestion | Extract JD signals and requirements | `jd-[company]-[role].md` |
+| 03 — clarifying-questions | Ask targeted questions to capture your narrative | `clarifications.md` |
+| 04 — cv-generation | Generate a tailored HTML CV | `versions/cv-v1.html` |
+| 05 — recruiter-review | Recruiter lens — ATS, clarity, first impression | `versions/cv-v2.html` |
+| 06 — hr-review | HR lens — culture fit, values, career narrative | `versions/cv-v3.html` |
+| 07 — hiring-manager-review | Hiring manager lens — outcomes, impact, credibility | `versions/cv-v4.html` |
+| 08 — technical-review | Technical peer lens — depth, domain credibility | `versions/cv-v5.html` |
+| 09 — interview-prep-recruiter | Questions + talking points for recruiter screen | `interview-prep/questions-recruiter.md` |
+| 10 — interview-prep-hr | Questions + talking points for HR interview | `interview-prep/questions-hr.md` |
+| 11 — interview-prep-hiring-manager | Questions + talking points for hiring manager | `interview-prep/questions-hiring-manager.md` |
+| 12 — interview-prep-technical | Questions + talking points for technical interview | `interview-prep/questions-technical-peer.md` |
+
+---
+
+## Starting points
+
+**New application** — run steps 1–8 in order. Steps 9–12 are optional interview prep once you have a final CV.
+
+**Returning user, new JD** — skip step 1. Your `cv-source.md` is already there. Start at step 2.
+
+**Interview prep only** — skip steps 1–8. Run steps 9–12 after confirming a final CV exists in `versions/`.
 
 ---
 
 ## Files in this project
 
-| File / Folder | What it contains | Persists across sessions? |
+| File / Folder | What it contains | Persists? |
 |---|---|---|
 | `cv-source.md` | Your structured CV data | Yes — reused for every application |
 | `jd-[company]-[role].md` | Extracted JD per application | Yes — one file per role |
@@ -110,6 +111,6 @@ Nothing is sent externally. Everything stays in this folder.
 ## Notes
 
 - CV versions are never overwritten. v1 through v5 are always available for comparison.
-- Findings files are append-only. Past observations from previous applications automatically inform the next session.
-- If you apply to the same company twice, skill 02 will detect the existing JD file and ask whether to update it or create a dated version.
-- You can skip any reviewer if it's not relevant. The skills are independent — v3 doesn't require v2 to exist first.
+- Reviewer findings are append-only — past observations from previous applications inform the next session automatically.
+- If you apply to the same company twice, step 02 will detect the existing JD file and ask whether to update it or create a new dated version.
+- You can skip any reviewer step. They are independent — v3 does not require v2 to exist first.
