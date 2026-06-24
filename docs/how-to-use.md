@@ -83,13 +83,63 @@ You only need to do this once per machine. After this, the skill files are perma
 
 ## Step 3 — Choose your AI platform
 
-Pick whichever you already have access to, or whichever is easiest to set up:
+### Decision matrix
 
-| Option | Cost | Best if you... |
-|--------|------|----------------|
-| **Claude Cowork** | Free (limited) / Pro subscription | Already use Claude |
-| **Gemini CLI** | Free (generous limits) | Comfortable with a terminal |
-| **GitHub Copilot in VS Code** | Free (limited) / $10/mo | Already use VS Code |
+Answer these four questions to find your best fit:
+
+**1. How do you plan to use this?**
+
+| | Claude Cowork | Gemini CLI | Copilot (VS Code) |
+|---|:---:|:---:|:---:|
+| One-off — just need a CV for one application | ✓ Best | ✓ Good | ✓ Good |
+| Recurring — will use this for multiple applications over time | ✓ Best | ✓ Best | ✓ Good |
+| Developing — want to edit skills, experiment, build on this | ✗ Limited | ✓ Good | ✓ Best |
+
+**2. What's your existing setup?**
+
+| | Claude Cowork | Gemini CLI | Copilot (VS Code) |
+|---|:---:|:---:|:---:|
+| I already use Claude / have a Claude account | ✓ Zero extra setup | — | — |
+| I already use VS Code | — | — | ✓ Zero extra setup |
+| I already use Google / have a Google account | — | ✓ Zero extra setup | — |
+| I'm starting from scratch | ✓ Easiest | ✓ Easy | ~ Moderate |
+
+**3. How comfortable are you with a terminal?**
+
+| | Claude Cowork | Gemini CLI | Copilot (VS Code) |
+|---|:---:|:---:|:---:|
+| Not at all — I prefer apps with a GUI | ✓ Best | ✗ Needs terminal | ~ A little terminal |
+| Comfortable with basic commands | ✓ Good | ✓ Best | ✓ Good |
+| Developer — I live in the terminal / IDE | ✓ Good | ✓ Best | ✓ Best |
+
+**4. What matters most on cost?**
+
+| | Claude Cowork | Gemini CLI | Copilot (VS Code) |
+|---|:---:|:---:|:---:|
+| Free, no strings | ✓ (with limits) | ✓ Best (1,500 req/day) | ✓ (with limits) |
+| Happy to pay a small amount for a better experience | ✓ Claude Pro | — | ✓ $10/mo |
+| Already paying for something | ✓ if you have Pro | ✓ already free | ✓ if you have Copilot |
+
+---
+
+### Quick recommendation
+
+**"I just want to try this once with minimum fuss"**
+→ Claude Cowork if you have a Claude account. Gemini CLI if you're comfortable with a terminal and want no cost ceiling.
+
+**"I'll use this regularly for job applications"**
+→ Claude Cowork or Gemini CLI. Both handle recurring sessions cleanly. Cowork is more conversational; Gemini CLI is faster for experienced users.
+
+**"I want to understand how it works, tweak the skills, or build on this"**
+→ GitHub Copilot in VS Code. You'll be editing files directly in an IDE, which makes tinkering natural. Gemini CLI is a close second if you prefer the terminal.
+
+**"I already pay for GitHub Copilot / use VS Code daily"**
+→ GitHub Copilot in VS Code — zero incremental cost or setup.
+
+**"I don't want to touch a terminal at all"**
+→ Claude Cowork. It's the only option here with a pure GUI.
+
+---
 
 Jump to the setup section for your chosen platform:
 
