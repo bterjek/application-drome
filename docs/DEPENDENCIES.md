@@ -75,6 +75,14 @@ platforms/github-copilot/SETUP.md
 - `docs/how-to-use.md` — Pipeline section (Step 4)
 - `docs/usage-guide.md` — If that skill's edge case behaviour is documented
 
+### The user isolation model changes (e.g. `users/` path prefix changes)
+- `CLAUDE.md` — Step 0 user detection + all file paths in pipeline tables + state detection
+- `GEMINI.md` — Step 0 user detection + all file paths
+- `.github/copilot-instructions.md` — Step 0 user detection + all file paths
+- `README.md` — Files-in-this-project table
+- `docs/how-to-use.md` — "What is this?" section + Step 4 intro + Files section
+- `.gitignore` — `users/` entry
+
 ### A skill's output file changes
 - `README.md` — Files-in-this-project table
 - `docs/how-to-use.md` — Files section + relevant step description
@@ -127,7 +135,8 @@ platforms/github-copilot/SETUP.md
 ├── 15-cover-letter-recruiter-review/
 ├── 16-cover-letter-hr-review/
 ├── 17-cover-letter-hiring-manager-review/
-└── 18-cover-letter-technical-review/
+├── 18-cover-letter-technical-review/
+└── 19-application-tracker/        ← closing step; archives CVs/JDs/cover letters + maintains log
 ```
 
 All SKILL.md files are encrypted via `.gitattributes` using the pattern `.claude/skills/**/*.md`.

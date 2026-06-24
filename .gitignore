@@ -5,21 +5,16 @@
 cv-generator.key
 *.key
 
-# Personal CV data
+# All personal user data — CV, JDs, generated versions, applications, findings
+users/
+
+# Legacy paths (pre-multi-user) — kept in case someone has an old layout
 cv-source.md
 clarifications.md
-
-# Job descriptions (session-specific)
+format-spec.md
 jd-*.md
-
-# Generated CV versions
 versions/
-
-# Reviewer findings (session-specific, accumulated per user)
 findings/
-
-# Lessons learned (session-specific)
 lessons-learned.md
-
-# Interview prep outputs (session-specific)
 interview-prep/
+applications/

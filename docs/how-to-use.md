@@ -23,7 +23,7 @@ This guide was last verified in **June 2026**.
 
 ## What is this?
 
-CV Generator is a project folder that turns an AI assistant into a structured application coach. It contains 18 encrypted skills — instructions that tell the AI how to:
+CV Generator is a project folder that turns an AI assistant into a structured application coach. It contains 19 encrypted skills — instructions that tell the AI how to:
 
 1. Extract and structure your existing CV
 2. Extract what a specific job description actually requires
@@ -32,8 +32,11 @@ CV Generator is a project folder that turns an AI assistant into a structured ap
 5. Generate a tailored CV and cover letter — matched to the role, not generic
 6. Refine both through four expert reviewer lenses
 7. Prepare you for every stage of the interview process
+8. Archive each completed application and maintain a searchable log
 
 A **runbook** sits above all of this — it reads your project folder at the start of every session, works out where you are in the pipeline, and routes you to the right next step. You never have to remember what comes next.
+
+**Multiple people can share the same repo on the same machine.** Each person gets their own isolated profile under `users/[name]/` — your CV, JDs, generated documents, and application history never mix with anyone else's.
 
 ---
 
@@ -208,6 +211,10 @@ Copilot proposes file changes as diffs — accept or reject each one individuall
 
 Once your platform is set up, the runbook does the navigation. Here is what each skill does.
 
+### First time? The runbook will ask your name
+
+The first thing the runbook does is check the `users/` folder. If it's empty, it asks for your name and creates `users/[yourname]/`. If someone else has already used the tool on this machine, it will list the existing profiles and ask who you are. From there, all your files are stored under your own folder.
+
 ### What to have ready
 - Your current CV (text, Word doc, or PDF you can copy from)
 - The job description you are applying to (full text from the job posting)
@@ -272,6 +279,15 @@ Each produces 8–10 likely questions with suggested talking points and coaching
 
 ---
 
+### Application Tracker (closing step)
+
+**Skill 19 — Application Tracker**
+Runs at the end of any session where you have a final CV or cover letter. Copies the JD, final CV, and cover letter into `users/[name]/applications/[company]-[role]-[date]/`, creates a `notes.md` for outcome tracking, and appends a row to `users/[name]/applications/log.md`.
+
+You can also run it standalone to update the status of a previous application (screening, interview, offer, rejected, withdrawn).
+
+---
+
 ## Returning to a session
 
 The runbook detects your state automatically. Just open your AI platform with this folder and tell it:
@@ -288,6 +304,7 @@ It will read the files present and tell you exactly what has been done and what 
 - **Cover letter only** — branch directly to skill 14. No CV required.
 - **Interview prep only** — run skills 10–13. The runbook will check which documents exist.
 - **Redo a review step** — jump to that skill directly. A new version is created; nothing is overwritten.
+- **Update an application status** — run skill 19 standalone and choose an existing entry from the log.
 
 ---
 
@@ -303,7 +320,10 @@ Check that the file exists. If `cv-source.md` is missing, run skill 01. If `form
 The clarifying questions in skill 03 and the format spec in skill 04 are the most important inputs. Re-run both with more detail, then regenerate from skill 05.
 
 **I want to start completely fresh**
-Delete `cv-source.md`, `clarifications.md`, `format-spec.md`, `jd-*.md`, and the `versions/` folder. Keep `findings/` if you want to preserve reviewer knowledge, or delete it too for a total reset.
+Delete everything inside `users/[yourname]/` except `findings/` (which you may want to keep — it contains accumulated reviewer knowledge). Or delete the whole `users/[yourname]/` folder for a total reset.
+
+**Someone else wants to use this on my machine**
+Nothing to configure — just open the tool and when asked "Who are you?", enter a different name. A new profile is created automatically.
 
 ---
 
@@ -311,24 +331,33 @@ Delete `cv-source.md`, `clarifications.md`, `format-spec.md`, `jd-*.md`, and the
 
 ```
 cv-generator/
-├── cv-source.md                      ← your CV in structured form
-├── jd-acme-engineer.md               ← extracted job description
-├── clarifications.md                 ← your answers to pre-generation questions
-├── format-spec.md                    ← agreed format for CV and cover letter
-├── versions/
-│   ├── cv-v1.html → cv-v5.html       ← CV drafts (v5 = final)
-│   └── cover-letter-v1.html → v5     ← cover letter drafts (v5 = final)
-├── findings/
-│   ├── recruiter.md                  ← reviewer notes (grow across sessions)
-│   ├── hr.md
-│   ├── hiring-manager.md
-│   └── technical-peer.md
-├── lessons-learned.md
-└── interview-prep/
-    ├── questions-recruiter.md
-    ├── questions-hr.md
-    ├── questions-hiring-manager.md
-    └── questions-technical-peer.md
+└── users/
+    └── yourname/
+        ├── cv-source.md                      ← your CV in structured form
+        ├── jd-acme-engineer.md               ← extracted job description
+        ├── clarifications.md                 ← your answers to pre-generation questions
+        ├── format-spec.md                    ← agreed format for CV and cover letter
+        ├── versions/
+        │   ├── cv-v1.html → cv-v5.html       ← CV drafts (v5 = final)
+        │   └── cover-letter-v1.html → v5     ← cover letter drafts (v5 = final)
+        ├── findings/
+        │   ├── recruiter.md                  ← reviewer notes (grow across sessions)
+        │   ├── hr.md
+        │   ├── hiring-manager.md
+        │   └── technical-peer.md
+        ├── lessons-learned.md
+        ├── interview-prep/
+        │   ├── questions-recruiter.md
+        │   ├── questions-hr.md
+        │   ├── questions-hiring-manager.md
+        │   └── questions-technical-peer.md
+        └── applications/
+            ├── log.md                        ← master application table
+            └── acme-engineer-2026-06-24/
+                ├── jd.md
+                ├── cv-final.html
+                ├── cover-letter-final.html
+                └── notes.md
 ```
 
-Everything stays on your machine. Nothing is sent anywhere.
+Everything stays on your machine. Nothing is sent anywhere. The entire `users/` folder is gitignored.
