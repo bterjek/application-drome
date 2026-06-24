@@ -4,6 +4,23 @@ This guide takes you from "I just got a link to this repo" to having a tailored 
 
 ---
 
+## Tested versions
+
+This guide was last verified in **June 2026**. The versions below are known to work.
+
+| Component | Tested version | Notes |
+|-----------|---------------|-------|
+| git-crypt | 0.8.0 | Install via `brew install git-crypt` |
+| Claude Desktop (Cowork) | Current — check [claude.ai/download](https://claude.ai/download) | Requires Pro plan ($20/mo). macOS 10.15+ or Windows 10 22H2+ |
+| Antigravity CLI | 0.1.x+ | Google's replacement for Gemini CLI — see note below |
+| Node.js (for Antigravity CLI) | 18 or later | Check with `node --version` |
+| VS Code | 1.109+ (Jan 2026 release) | Earlier versions may not support agent mode fully |
+| GitHub Copilot extension | Latest from VS Code Marketplace | Agent mode requires Copilot Free (50 req/mo) or Pro ($10/mo) |
+
+> **Gemini CLI → Antigravity CLI:** Google deprecated Gemini CLI on June 18, 2026 for personal Google accounts. The replacement is [Antigravity CLI](https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/), which keeps the same file read/write capabilities, agent skills, and terminal-based workflow. This guide uses Antigravity CLI in the setup section below. If you already have Gemini CLI installed and it still works for your account (e.g. via a Gemini Code Assist enterprise licence), the workflow is identical.
+
+---
+
 ## What is this?
 
 CV Generator is a project folder that turns an AI assistant into a structured CV coach. It contains a set of instructions (called skills) that tell the AI exactly how to:
@@ -114,37 +131,37 @@ Answer these four questions to find your best fit:
 
 **4. What matters most on cost?**
 
-| | Claude Cowork | Gemini CLI | Copilot (VS Code) |
+| | Claude Cowork | Antigravity CLI | Copilot (VS Code) |
 |---|:---:|:---:|:---:|
-| Free, no strings | ✓ (with limits) | ✓ Best (1,500 req/day) | ✓ (with limits) |
-| Happy to pay a small amount for a better experience | ✓ Claude Pro | — | ✓ $10/mo |
-| Already paying for something | ✓ if you have Pro | ✓ already free | ✓ if you have Copilot |
+| Free, no strings | ✗ Paid only ($20/mo) | ✓ Best (generous free tier) | ✓ Free (50 agent req/mo) |
+| Happy to pay a small amount | ✓ Pro $20/mo | — | ✓ Pro $10/mo |
+| Already paying for something | ✓ if you have Claude Pro or Max | ✓ already free | ✓ if you have Copilot |
 
 ---
 
 ### Quick recommendation
 
 **"I just want to try this once with minimum fuss"**
-→ Claude Cowork if you have a Claude account. Gemini CLI if you're comfortable with a terminal and want no cost ceiling.
+→ GitHub Copilot in VS Code (free, 50 agent interactions/month is plenty for one session) if you have VS Code. Antigravity CLI if you're comfortable with a terminal — generous free tier, no account paywall.
 
 **"I'll use this regularly for job applications"**
-→ Claude Cowork or Gemini CLI. Both handle recurring sessions cleanly. Cowork is more conversational; Gemini CLI is faster for experienced users.
+→ Claude Cowork if you're already on a paid Claude plan — most conversational experience. Antigravity CLI for power users who want speed and no usage caps to worry about.
 
 **"I want to understand how it works, tweak the skills, or build on this"**
-→ GitHub Copilot in VS Code. You'll be editing files directly in an IDE, which makes tinkering natural. Gemini CLI is a close second if you prefer the terminal.
+→ GitHub Copilot in VS Code. Editing files directly in an IDE makes tinkering natural. Antigravity CLI is a close second if you prefer the terminal.
 
 **"I already pay for GitHub Copilot / use VS Code daily"**
 → GitHub Copilot in VS Code — zero incremental cost or setup.
 
 **"I don't want to touch a terminal at all"**
-→ Claude Cowork. It's the only option here with a pure GUI.
+→ Claude Cowork. It's the only option here with a pure GUI — but note it requires a paid Claude plan ($20/mo).
 
 ---
 
 Jump to the setup section for your chosen platform:
 
 - [Claude Cowork setup](#option-a--claude-cowork)
-- [Gemini CLI setup](#option-b--gemini-cli)
+- [Antigravity CLI setup](#option-b--antigravity-cli)
 - [GitHub Copilot in VS Code setup](#option-c--github-copilot-in-vs-code)
 
 ---
@@ -153,7 +170,8 @@ Jump to the setup section for your chosen platform:
 
 ### What you need
 - The [Claude desktop app](https://claude.ai/download)
-- A Claude account (free tier works to start)
+- A Claude **Pro, Max, Team, or Enterprise** subscription ($20/mo minimum — Cowork is not available on the free tier)
+- macOS 10.15 (Catalina) or later, or Windows 10 22H2 or later
 
 ### Setup
 1. Open the Claude desktop app
@@ -174,52 +192,55 @@ Claude will know which skill to run and guide you through it.
 
 ---
 
-## Option B — Gemini CLI
+## Option B — Antigravity CLI
+
+> **Note:** Antigravity CLI is Google's replacement for Gemini CLI, which was deprecated for personal Google accounts on June 18, 2026. Antigravity keeps the same file read/write workflow. If you have an existing Gemini CLI install that still works (e.g. via a Gemini Code Assist enterprise licence), the commands are identical — just substitute `gemini` for `antigravity`.
 
 ### What you need
-- [Node.js](https://nodejs.org/) version 18 or later
+- [Node.js](https://nodejs.org/) version 18 or later (check with `node --version`)
 - A Google account
 
 ### Setup
 
-**Install Gemini CLI:**
+**Install Antigravity CLI:**
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @google/antigravity-cli
 ```
 
 **Sign in:**
 
 ```bash
-gemini auth login
+antigravity auth login
 ```
 
-This opens your browser. Sign in with your Google account. The free tier gives you 1,500 requests per day with Gemini 2.5 Pro — more than enough.
+This opens your browser. Sign in with your Google account. The free tier is generous — more than enough for CV sessions.
 
 ### How to run a step
 
-Navigate to the project folder and start Gemini:
+Navigate to the project folder and start Antigravity:
 
 ```bash
 cd path/to/cv-generator
-gemini
+antigravity
 ```
 
-You'll see a prompt. To run a step, tell Gemini to read the skill file for that step:
+You'll see a prompt. To run a step, tell it to read the skill file for that step:
 
 > "Read `.claude/skills/01-cv-ingestion/SKILL.md` and follow the instructions."
 
-Gemini will read the file and take you through the step. Before writing any file, it shows you exactly what it plans to write and asks for your confirmation.
+Antigravity will read the file and take you through the step. Before writing any file, it shows you exactly what it plans to write and asks for your confirmation.
 
-See `GEMINI.md` in the project root for the full list of skill file paths.
+See `GEMINI.md` in the project root for the full list of skill file paths. (The file is named GEMINI.md for compatibility but works identically with Antigravity CLI.)
 
 ---
 
 ## Option C — GitHub Copilot in VS Code
 
 ### What you need
-- [VS Code](https://code.visualstudio.com/) (download and install if you don't have it)
+- [VS Code](https://code.visualstudio.com/) version 1.109 or later (January 2026 release)
 - A GitHub account
+- GitHub Copilot: **Free tier** (50 agent-mode interactions/month — enough for 2–3 full CV sessions) or **Pro** ($10/mo, unlimited)
 
 ### Setup
 

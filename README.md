@@ -6,6 +6,8 @@ The skill prompts in this repo are encrypted with [git-crypt](https://github.com
 
 **New here? Read [`docs/how-to-use.md`](docs/how-to-use.md) — it covers everything from setup to a full session, step by step.**
 
+*Maintainers: see [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md) for which files to update when something changes.*
+
 ---
 
 ## How it works
@@ -31,9 +33,11 @@ This project runs on any AI tool that has **native read/write access to your loc
 
 | Platform | File access | Cost | Package |
 |----------|------------|------|---------|
-| **Claude Cowork** | Native | Free (limited) / Pro | Built-in — `.claude/skills/` |
-| **Gemini CLI** | Native | Free (1,500 req/day) | `GEMINI.md` — see `platforms/gemini-cli/SETUP.md` |
-| **GitHub Copilot in VS Code** | Native (agent mode) | Free (limited) / $10/mo | `.github/copilot-instructions.md` — see `platforms/github-copilot/SETUP.md` |
+| **Claude Cowork** | Native | Pro plan required ($20/mo) | Built-in — `.claude/skills/` |
+| **Antigravity CLI** *(replaces Gemini CLI)* | Native | Free (generous limits) | `GEMINI.md` — see `platforms/gemini-cli/SETUP.md` |
+| **GitHub Copilot in VS Code** | Native (agent mode) | Free (50 agent req/mo) / Pro $10/mo | `.github/copilot-instructions.md` — see `platforms/github-copilot/SETUP.md` |
+
+> **Gemini CLI users:** Google deprecated Gemini CLI for personal accounts on June 18, 2026 in favour of [Antigravity CLI](https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/). The workflow is identical — substitute `antigravity` for `gemini`. The `GEMINI.md` router file works with both.
 
 Platforms that do **not** support this workflow: ChatGPT (no local filesystem access without MCP setup), Microsoft Copilot web (upload only, no write), Perplexity web.
 
