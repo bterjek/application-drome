@@ -1,6 +1,6 @@
 # CV Generator
 
-A structured pipeline for tailoring your CV to any job description, refining it through four expert reviewer lenses, and preparing for every interview stage.
+A structured pipeline that takes your CV and a job description, tailors your application through four expert reviewer lenses, generates a matching cover letter, and prepares you for every interview stage.
 
 The skill prompts in this repo are encrypted with [git-crypt](https://github.com/AGWA/git-crypt). You need a key from the repo owner to unlock them.
 
@@ -12,34 +12,45 @@ The skill prompts in this repo are encrypted with [git-crypt](https://github.com
 
 ## How it works
 
-You bring a CV and a job description. The pipeline does the rest:
+You bring a CV and a job description. Three runbooks (one per platform) orchestrate 18 skills across two parallel pipelines:
 
 ```
-Your CV → extract → JD → extract → clarifying questions
-        → generate v1 → recruiter review → v2
-                      → HR review → v3
-                      → hiring manager review → v4
-                      → technical peer review → v5 (final)
-                      → interview prep per persona
+Your CV ──► extract ──► JD ──► extract ──► clarifying questions ──► format & style
+                                                                           │
+                                              ┌────────────────────────────┤
+                                              │                            │
+                                         CV pipeline               Cover letter pipeline
+                                              │                            │
+                                    generate cv-v1              generate cl-v1
+                                    recruiter → v2              recruiter → v2
+                                    HR → v3                     HR → v3
+                                    hiring mgr → v4             hiring mgr → v4
+                                    technical → v5              technical → v5
+                                              │                            │
+                                              └────────────┬───────────────┘
+                                                           │
+                                                   interview prep
+                                              (document-aware: uses
+                                               CV and/or cover letter)
 ```
 
-Each reviewer persona leaves behind a findings file that persists across sessions — the more you use the project, the sharper the feedback gets.
+Each reviewer persona accumulates findings across sessions — the more you use it, the sharper the feedback gets.
 
 ---
 
 ## Platform support
 
-This project runs on any AI tool that has **native read/write access to your local filesystem**. Three platforms support this out of the box:
+This project runs on any AI tool with native read/write access to your local filesystem. Each platform gets its own runbook that orchestrates the full pipeline.
 
-| Platform | File access | Cost | Package |
-|----------|------------|------|---------|
-| **Claude Cowork** | Native | Pro plan required ($20/mo) | Built-in — `.claude/skills/` |
-| **Antigravity CLI** *(replaces Gemini CLI)* | Native | Free (generous limits) | `GEMINI.md` — see `platforms/gemini-cli/SETUP.md` |
-| **GitHub Copilot in VS Code** | Native (agent mode) | Free (50 agent req/mo) / Pro $10/mo | `.github/copilot-instructions.md` — see `platforms/github-copilot/SETUP.md` |
+| Platform | Runbook | Cost | Setup guide |
+|----------|---------|------|-------------|
+| **Claude Cowork** | `CLAUDE.md` (auto-loaded) | Pro plan required ($20/mo) | `docs/how-to-use.md` Option A |
+| **Antigravity CLI** *(replaces Gemini CLI)* | `GEMINI.md` | Free (generous limits) | `platforms/gemini-cli/SETUP.md` |
+| **GitHub Copilot in VS Code** | `.github/copilot-instructions.md` | Free (50 agent req/mo) / Pro $10/mo | `platforms/github-copilot/SETUP.md` |
 
-> **Gemini CLI users:** Google deprecated Gemini CLI for personal accounts on June 18, 2026 in favour of [Antigravity CLI](https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/). The workflow is identical — substitute `antigravity` for `gemini`. The `GEMINI.md` router file works with both.
+> **Gemini CLI users:** Google deprecated Gemini CLI for personal accounts on June 18, 2026 in favour of [Antigravity CLI](https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/). The workflow is identical — substitute `antigravity` for `gemini`. The `GEMINI.md` runbook works with both.
 
-Platforms that do **not** support this workflow: ChatGPT (no local filesystem access without MCP setup), Microsoft Copilot web (upload only, no write), Perplexity web.
+Platforms that do **not** support this workflow: ChatGPT (no local filesystem access without MCP setup), Microsoft Copilot web (upload only, no write).
 
 ---
 
@@ -52,44 +63,51 @@ brew install git-crypt
 git-crypt unlock /path/to/cv-generator.key
 ```
 
-You need `cv-generator.key` from the repo owner. Send them your request — they'll share it securely.
+You need `cv-generator.key` from the repo owner.
 
 ### 2. Choose your platform and follow its setup guide
 
-- **Claude Cowork** — open this folder in Cowork. Skills load automatically.
-- **Gemini CLI** — see `platforms/gemini-cli/SETUP.md`
+- **Claude Cowork** — open this folder in Cowork. `CLAUDE.md` loads automatically.
+- **Antigravity CLI** — see `platforms/gemini-cli/SETUP.md`
 - **GitHub Copilot (VS Code)** — see `platforms/github-copilot/SETUP.md`
 
 ---
 
-## Workflow steps
+## Pipeline — 18 skills
 
-All platforms use the same 12 skill files. How you invoke them differs by platform — see the platform-specific guide or router file (`GEMINI.md` / `.github/copilot-instructions.md`).
+### Shared foundation
+| # | Skill | Output |
+|---|-------|--------|
+| 01 | CV Ingestion | `cv-source.md` |
+| 02 | JD Ingestion | `jd-[company]-[role].md` |
+| 03 | Clarifying Questions | `clarifications.md` |
+| 04 | Format & Style Coach | `format-spec.md` |
 
-| Step | What it does | Output |
-|------|-------------|--------|
-| 01 — cv-ingestion | Extract your CV into structured markdown | `cv-source.md` |
-| 02 — jd-ingestion | Extract JD signals and requirements | `jd-[company]-[role].md` |
-| 03 — clarifying-questions | Ask targeted questions to capture your narrative | `clarifications.md` |
-| 04 — cv-generation | Generate a tailored HTML CV | `versions/cv-v1.html` |
-| 05 — recruiter-review | Recruiter lens — ATS, clarity, first impression | `versions/cv-v2.html` |
-| 06 — hr-review | HR lens — culture fit, values, career narrative | `versions/cv-v3.html` |
-| 07 — hiring-manager-review | Hiring manager lens — outcomes, impact, credibility | `versions/cv-v4.html` |
-| 08 — technical-review | Technical peer lens — depth, domain credibility | `versions/cv-v5.html` |
-| 09 — interview-prep-recruiter | Questions + talking points for recruiter screen | `interview-prep/questions-recruiter.md` |
-| 10 — interview-prep-hr | Questions + talking points for HR interview | `interview-prep/questions-hr.md` |
-| 11 — interview-prep-hiring-manager | Questions + talking points for hiring manager | `interview-prep/questions-hiring-manager.md` |
-| 12 — interview-prep-technical | Questions + talking points for technical interview | `interview-prep/questions-technical-peer.md` |
+### CV pipeline
+| # | Skill | Output |
+|---|-------|--------|
+| 05 | CV Generation | `versions/cv-v1.html` |
+| 06 | Recruiter Review | `versions/cv-v2.html` |
+| 07 | HR Review | `versions/cv-v3.html` |
+| 08 | Hiring Manager Review | `versions/cv-v4.html` |
+| 09 | Technical Peer Review | `versions/cv-v5.html` |
 
----
+### Cover letter pipeline (parallel — runs independently)
+| # | Skill | Output |
+|---|-------|--------|
+| 14 | Cover Letter Generation | `versions/cover-letter-v1.html` |
+| 15 | Cover Letter Recruiter Review | `versions/cover-letter-v2.html` |
+| 16 | Cover Letter HR Review | `versions/cover-letter-v3.html` |
+| 17 | Cover Letter Hiring Manager Review | `versions/cover-letter-v4.html` |
+| 18 | Cover Letter Technical Review | `versions/cover-letter-v5.html` |
 
-## Starting points
-
-**New application** — run steps 1–8 in order. Steps 9–12 are optional interview prep once you have a final CV.
-
-**Returning user, new JD** — skip step 1. Your `cv-source.md` is already there. Start at step 2.
-
-**Interview prep only** — skip steps 1–8. Run steps 9–12 after confirming a final CV exists in `versions/`.
+### Interview prep (document-aware — uses CV and/or cover letter)
+| # | Skill | Output |
+|---|-------|--------|
+| 10 | Interview Prep: Recruiter | `interview-prep/questions-recruiter.md` |
+| 11 | Interview Prep: HR | `interview-prep/questions-hr.md` |
+| 12 | Interview Prep: Hiring Manager | `interview-prep/questions-hiring-manager.md` |
+| 13 | Interview Prep: Technical Peer | `interview-prep/questions-technical-peer.md` |
 
 ---
 
@@ -100,9 +118,10 @@ All platforms use the same 12 skill files. How you invoke them differs by platfo
 | `cv-source.md` | Your structured CV data | Yes — reused for every application |
 | `jd-[company]-[role].md` | Extracted JD per application | Yes — one file per role |
 | `clarifications.md` | Your answers to pre-generation questions | Per session |
-| `versions/` | All CV versions (v1–v5), never overwritten | Yes |
-| `findings/recruiter.md` | Recruiter observations, append-only | Yes — grows over time |
-| `findings/hr.md` | HR observations, append-only | Yes |
+| `format-spec.md` | Agreed CV and cover letter format | Per session (reusable) |
+| `versions/` | All CV and cover letter versions, never overwritten | Yes |
+| `findings/recruiter.md` | Recruiter persona observations, append-only | Yes |
+| `findings/hr.md` | HR persona observations, append-only | Yes |
 | `findings/hiring-manager.md` | Hiring manager observations, append-only | Yes |
 | `findings/technical-peer.md` | Technical peer observations, append-only | Yes |
 | `lessons-learned.md` | Cross-session lessons from all personas | Yes |
@@ -114,7 +133,8 @@ Nothing is sent externally. Everything stays in this folder.
 
 ## Notes
 
-- CV versions are never overwritten. v1 through v5 are always available for comparison.
-- Reviewer findings are append-only — past observations from previous applications inform the next session automatically.
-- If you apply to the same company twice, step 02 will detect the existing JD file and ask whether to update it or create a new dated version.
-- You can skip any reviewer step. They are independent — v3 does not require v2 to exist first.
+- The runbook (CLAUDE.md / GEMINI.md / copilot-instructions.md) detects your current state automatically and routes you to the right next step.
+- You can re-enter the pipeline at any point — the runbook handles branching.
+- CV and cover letter pipelines are independent. You can generate only one, or both.
+- Interview prep is document-aware — it incorporates whichever documents you have.
+- Reviewer findings are append-only and persist across applications, making feedback sharper over time.

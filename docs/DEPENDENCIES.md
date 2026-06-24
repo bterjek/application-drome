@@ -9,30 +9,41 @@ This file tracks which documentation files depend on which, so that when one thi
 ```
 README.md
 ├── links to → docs/how-to-use.md
-├── links to → docs/usage-guide.md (via "see docs/usage-guide.md")
-├── mirrors → Platform support table (costs, platform names, availability)
-├── mirrors → Workflow steps table
+├── links to → docs/DEPENDENCIES.md
+├── mirrors → Platform support table (costs, platform names, runbook files)
+├── mirrors → Pipeline / skills table (all 18 skills)
 └── mirrors → Files-in-this-project table
+
+CLAUDE.md
+├── IS the runbook for Claude Cowork
+├── mirrors → Pipeline tables (all 18 skills, file paths)
+├── mirrors → State detection logic
+└── references → .claude/skills/*/SKILL.md (all 18 paths)
+
+GEMINI.md
+├── IS the runbook for Antigravity CLI / Gemini CLI
+├── mirrors → Pipeline tables (all 18 skills, file paths)
+├── mirrors → State detection logic
+└── references → .claude/skills/*/SKILL.md (all 18 paths)
+
+.github/copilot-instructions.md
+├── IS the runbook for GitHub Copilot (VS Code agent mode)
+├── mirrors → Pipeline tables (all 18 skills, file paths)
+├── mirrors → State detection logic
+└── references → .claude/skills/*/SKILL.md (all 18 paths)
 
 docs/how-to-use.md
 ├── mirrors → Platform support table (costs, platform names, availability)
 ├── mirrors → Decision matrix (platform names, costs, capabilities)
-├── mirrors → Workflow steps (steps 01–12, what each does, output files)
-├── references → GEMINI.md (mentions it as the router for Antigravity CLI)
-├── references → .github/copilot-instructions.md (mentions it as router for Copilot)
+├── mirrors → Pipeline / skills (steps 01–18, what each does, output files)
+├── references → CLAUDE.md
+├── references → GEMINI.md
+├── references → .github/copilot-instructions.md
 ├── references → platforms/gemini-cli/SETUP.md
 └── references → platforms/github-copilot/SETUP.md
 
 docs/usage-guide.md
 └── references → README.md ("See README.md for setup...")
-
-GEMINI.md
-├── mirrors → Workflow steps table (skill file paths, what each step does)
-└── references → .claude/skills/*/SKILL.md (all 12 paths)
-
-.github/copilot-instructions.md
-├── mirrors → Workflow steps table (skill file paths, what each step does)
-└── references → .claude/skills/*/SKILL.md (all 12 paths)
 
 platforms/gemini-cli/SETUP.md
 └── references → GEMINI.md
@@ -46,53 +57,80 @@ platforms/github-copilot/SETUP.md
 ## What to update when things change
 
 ### A platform is added or removed
-Update all of these:
 - `README.md` — Platform support table
-- `docs/how-to-use.md` — Platform support summary, decision matrix (all four sub-tables + quick recommendations), Option A/B/C setup sections
-- `platforms/` — Add or remove the relevant `SETUP.md`
-- Add or remove the platform router file (`GEMINI.md`, `.github/copilot-instructions.md`, etc.)
+- `docs/how-to-use.md` — Platform summary, decision matrix (all four sub-tables + quick recommendations), setup sections
+- Add or remove platform runbook (`CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`)
+- Add or remove `platforms/[platform]/SETUP.md`
 
 ### A platform's cost, tier, or version changes
-Update:
 - `README.md` — Platform support table
-- `docs/how-to-use.md` — Tested versions table + decision matrix cost section + platform setup "What you need" section + quick recommendations
-- `platforms/[platform]/SETUP.md` — Tier comparison table (if present)
+- `docs/how-to-use.md` — Tested versions table + decision matrix cost section + platform setup "What you need" + quick recommendations
+- `platforms/[platform]/SETUP.md` — Tier comparison table if present
 
 ### A skill is added, removed, or renamed
-Update:
-- `GEMINI.md` — Workflow steps table
-- `.github/copilot-instructions.md` — Workflow steps table
-- `README.md` — Workflow steps table
-- `docs/how-to-use.md` — The pipeline section (Step 4)
-- `docs/usage-guide.md` — If the edge case behaviour of that skill is documented
+- `CLAUDE.md` — Pipeline tables
+- `GEMINI.md` — Pipeline tables
+- `.github/copilot-instructions.md` — Pipeline tables
+- `README.md` — Pipeline / skills table
+- `docs/how-to-use.md` — Pipeline section (Step 4)
+- `docs/usage-guide.md` — If that skill's edge case behaviour is documented
 
 ### A skill's output file changes
-Update:
 - `README.md` — Files-in-this-project table
-- `docs/how-to-use.md` — Files-in-this-project section + relevant step description in Step 4
-- `docs/usage-guide.md` — If that file is mentioned in edge cases
+- `docs/how-to-use.md` — Files section + relevant step description
+- `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md` — Pipeline tables
+
+### The state detection logic changes (e.g. new pipeline branch added)
+- `CLAUDE.md` — State detection table
+- `GEMINI.md` — State detection table
+- `.github/copilot-instructions.md` — State detection table
 
 ### The git-crypt version or setup process changes
-Update:
 - `docs/how-to-use.md` — Tested versions table + Step 2 (unlock instructions)
 - `README.md` — Setup section
 - `platforms/gemini-cli/SETUP.md` — Unlock section
 - `platforms/github-copilot/SETUP.md` — Unlock section
 
-### The `.gitattributes` encryption scope changes (e.g. new paths encrypted)
-Update:
+### The .gitattributes encryption scope changes
 - `docs/how-to-use.md` — Troubleshooting section if behaviour changes
-- `README.md` — No direct mention, but note if it affects the setup flow
 
 ---
 
-## Platforms and their router files
+## Platforms and their runbooks
 
-| Platform | Router file | Setup guide |
-|----------|------------|-------------|
-| Claude Cowork | (none — skills auto-detected from `.claude/skills/`) | `docs/how-to-use.md` Option A |
+| Platform | Runbook | Setup guide |
+|----------|---------|-------------|
+| Claude Cowork | `CLAUDE.md` (auto-loaded) | `docs/how-to-use.md` Option A |
 | Antigravity CLI / Gemini CLI | `GEMINI.md` | `platforms/gemini-cli/SETUP.md` |
 | GitHub Copilot (VS Code) | `.github/copilot-instructions.md` | `platforms/github-copilot/SETUP.md` |
+
+---
+
+## Skill directory structure
+
+```
+.claude/skills/
+├── 01-cv-ingestion/
+├── 02-jd-ingestion/
+├── 03-clarifying-questions/
+├── 04-format-style-coach/         ← NEW: produces format-spec.md
+├── 05-cv-generation/
+├── 06-recruiter-review/
+├── 07-hr-review/
+├── 08-hiring-manager-review/
+├── 09-technical-review/
+├── 10-interview-prep-recruiter/   ← document-aware (CV + cover letter)
+├── 11-interview-prep-hr/
+├── 12-interview-prep-hiring-manager/
+├── 13-interview-prep-technical/
+├── 14-cover-letter-generation/    ← parallel pipeline starts here
+├── 15-cover-letter-recruiter-review/
+├── 16-cover-letter-hr-review/
+├── 17-cover-letter-hiring-manager-review/
+└── 18-cover-letter-technical-review/
+```
+
+All SKILL.md files are encrypted via `.gitattributes` using the pattern `.claude/skills/**/*.md`.
 
 ---
 
